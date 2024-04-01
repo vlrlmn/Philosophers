@@ -13,45 +13,56 @@
 # include <limits.h>
 # include <stdbool.h>
 
-typedef struct 
-{
-    size_t philosophers;
-    size_t time_to_die;
-    size_t time_to_eat;
-    size_t time_to_sleep;
-    size_t meals_count;
-    bool has_meals_count;
-    size_t start_time;
-}           t_philo;
-
 typedef struct s_philosopher
 {
-    int ph_id;                     
-    pthread_t thread;        
-    size_t last_meal_time;
-    size_t meals_eaten;
-    pthread_mutex_t *left_fork;
-    pthread_mutex_t *right_fork;
-    struct s_simulation *sim;
-}               t_philo_each;
+    int                 ph_id;              
+    pthread_t           thread;        
+    size_t              last_meal_time; //last_meal
+    size_t              meals_eaten; //num_meals
+    pthread_mutex_t     *left_fork;
+    pthread_mutex_t     *right_fork;
+    int                 flag;
+    int                 meals_done; //philo_is_full
+}               t_philo;
 
-typedef struct s_simulation
+typedef struct 
 {
-    t_philo         sim_params;
-    t_philo_each   *philosophers;
-    pthread_mutex_t *forks;
-    pthread_mutex_t write_mutex;
-    bool            ph_is_dead;
-}               t_simulation;
+    size_t              ph_amount; //num_of_philo
+    size_t              time_to_die;
+    size_t              time_to_eat;
+    size_t              time_to_sleep;
+    size_t              meals_count;
+    int                 id; //index
+    size_t              start_time; //start
+    t_philo             *philos;
+    pthread_mutex_t     **forks;
+    pthread_mutex_t     *sim; //typing
+    // struct timeval      timer; //timer
+}           t_philo_args;
+
+
+// typedef struct s_simulation
+// {
+//     t_philo         sim_params;
+//     t_philo_each   *philosophers;
+//     pthread_mutex_t *forks;
+//     pthread_mutex_t write_mutex;
+//     bool            ph_is_dead;
+// }               t_simulation;
 
 bool	                valid_nums(char **argv);
 int	                    ft_atol(char *str);
 int                     ft_strlen(char *str);
-void 					init_philo_params(t_philo *philo_params, char **argv);
-void    				init_forks(t_simulation *sim);
-void                    init_philos(t_simulation *sim);
+void                    init_philo_params(t_philo_args *table, char **argv);
+// void    				init_forks(t_simulation *sim);
+// void                    init_philos(t_simulation *sim);
 void 					*philo_routine(void *arg);
 int                     ft_isdigit(int c);
 void                    exit_with_error(char *msg);
 size_t                  get_time(void);
+
+/*Errors and free mem*/
+void exit_with_error(char *msg);
+void free_forks_and_exit(pthread_mutex_t **forks, char *msg);
+void init_thread(t_philo_args   *table);
 #endif
