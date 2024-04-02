@@ -1,6 +1,35 @@
 #include "philo.h"
 
-void init_philo_params(t_philo_args *table)
+void init_each_philosopher(t_philo_args *table, int i)
+{
+    table->philos[i].ph_id = i + 1;
+    table->philos[i].meals_eaten = 0;
+    table->philos[i].flag = 1;
+    table->philos[i].meals_done = 0;
+    table->philos[i].right_fork = table->forks[i];
+    if (i + 1 == table->ph_amount)
+        table->philos[i].left_fork = table->forks[0];
+    else
+        table->philos[i].left_fork = table->forks[i + 1];
+}
+
+void init_philosophers(t_philo_args *table)
+{
+    int i;
+
+    i = 0;
+    table->philos = malloc(sizeof(t_philo) * table->ph_amount);
+    if (!table->philos)
+    {
+        free_forks(table->forks);
+        free(table->sim);
+        exit_with_error("Memory error: philosopher is not created\n");
+    }
+    while(i < table->ph_amount)
+        init_each_philosopher(table, i++);
+}
+
+void init_table(t_philo_args *table)
 {
     int i;
 
@@ -26,7 +55,7 @@ void init_philo_params(t_philo_args *table)
     table->start_time = get_time();
 }
 
-void init_philo_params(t_philo_args *table, char **argv)
+void init_table_params(t_philo_args *table, char **argv)
 {
     table->ph_amount = ft_atol(argv[1]);
     table->time_to_die = ft_atol(argv[2]);

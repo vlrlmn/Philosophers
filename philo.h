@@ -65,4 +65,6 @@ size_t                  get_time(void);
 void exit_with_error(char *msg);
 void free_forks_and_exit(pthread_mutex_t **forks, char *msg);
 void init_thread(t_philo_args   *table);
+void init_table(t_philo_args *table);
+void init_table_params(t_philo_args *table, char **argv);
 #endif
