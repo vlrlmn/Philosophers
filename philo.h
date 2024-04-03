@@ -37,7 +37,7 @@ typedef struct
     t_philo             *philos;
     pthread_mutex_t     **forks;
     pthread_mutex_t     *sim; //typing
-    // struct timeval      timer; //timer
+    struct timeval      timer; //timer
 }           t_philo_args;
 
 
@@ -50,12 +50,12 @@ typedef struct
 //     bool            ph_is_dead;
 // }               t_simulation;
 
+void init_table_params(t_philo_args *table, char **argv);
+void init_table(t_philo_args *table);
+void init_thread(t_philo_args   *table);
 bool	                valid_nums(char **argv);
 int	                    ft_atol(char *str);
 int                     ft_strlen(char *str);
-void                    init_philo_params(t_philo_args *table, char **argv);
-// void    				init_forks(t_simulation *sim);
-// void                    init_philos(t_simulation *sim);
 void 					*philo_routine(void *arg);
 int                     ft_isdigit(int c);
 void                    exit_with_error(char *msg);
@@ -67,4 +67,5 @@ void free_forks_and_exit(pthread_mutex_t **forks, char *msg);
 void init_thread(t_philo_args   *table);
 void init_table(t_philo_args *table);
 void init_table_params(t_philo_args *table, char **argv);
+
 #endif

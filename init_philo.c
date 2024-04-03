@@ -1,5 +1,5 @@
 #include "philo.h"
-
+/*Set parameters for philosophers*/
 void init_each_philosopher(t_philo_args *table, int i)
 {
     table->philos[i].ph_id = i + 1;
@@ -13,6 +13,7 @@ void init_each_philosopher(t_philo_args *table, int i)
         table->philos[i].left_fork = table->forks[i + 1];
 }
 
+/*Init the philosophers. Malloc for the structure wiht a parameters for each philosopher*/
 void init_philosophers(t_philo_args *table)
 {
     int i;
@@ -29,6 +30,8 @@ void init_philosophers(t_philo_args *table)
         init_each_philosopher(table, i++);
 }
 
+/*Init forks and pfilosophers: malloc memory for mutexes and init them. 
+The fork is a shared resource. The philisophers are processes*/
 void init_table(t_philo_args *table)
 {
     int i;
@@ -52,9 +55,10 @@ void init_table(t_philo_args *table)
         free_forks_and_exit(table->forks, "Error to malloc memory\n");
     pthread_mutex_init(table->sim, NULL);
     init_philosophers(table);
-    table->start_time = get_time();
+    table->start_time = gettimeofday(&table->timer, NULL);
 }
 
+/*Init table parameters after parsing*/
 void init_table_params(t_philo_args *table, char **argv)
 {
     table->ph_amount = ft_atol(argv[1]);
