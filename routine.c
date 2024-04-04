@@ -1,6 +1,15 @@
 #include "philo.h"
+long long	get_time_ms(struct timeval start)
+{
+	struct timeval	now;
+	gettimeofday(&now, NULL);
 
-void check_if_dead(void *args)
+	long long elapsed = (now.tv_sec - start.tv_sec) * 1000LL + (now.tv_usec - start.tv_usec) / 1000LL;
+	return elapsed;
+}
+
+
+void *check_if_dead(void *args)
 {
     int i;
     int flag;
@@ -12,7 +21,7 @@ void check_if_dead(void *args)
         i = 0;
         while(i < table->ph_amount)
         {
-            if(get_time_ms(table->timer) - table->philos[i].last_meal_time > table->time_to_die)
+            if(get_time_ms(table->timer) - table->philos[i].last_meal_time > (long long)table->time_to_die)
                 change_status(table, "died", i, 1);
             i++;
         }
@@ -70,7 +79,7 @@ void take_forks(t_philo_args *table, pthread_mutex_t *fork1, pthread_mutex_t *fo
 	change_status(table, "has taken a fork", i, 0);
 	pthread_mutex_lock(fork2);
 	change_status(table, "has taken a fork", i, 0);
-	table->philos[i].last_meal_time = get_time_ms(table->start_time);
+	table->philos[i].last_meal_time = get_time_ms(table->timer);
 	change_status(table, "is eating", i, 0);
 	usleeper(table->time_to_eat, table->timer);
 	pthread_mutex_unlock(fork2);
@@ -80,14 +89,14 @@ void take_forks(t_philo_args *table, pthread_mutex_t *fork1, pthread_mutex_t *fo
 	change_status(table, "is thinking", i, 0);
 }
 
-void philo_routine(void *args)
+void *philo_routine(void *args)
 {
     t_philo_args		*table;
 	int	i;
 
 	table = (t_philo_args *)args;
 	i = table->id++;
-    deadlock_protection(table, i);
+    deadlock_protector(table, i);
     while (1)
     {
         if(i % 2)

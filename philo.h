@@ -17,8 +17,8 @@ typedef struct s_philosopher
 {
     int                 ph_id;              
     pthread_t           thread;        
-    size_t              last_meal_time; //last_meal
-    size_t              meals_eaten; //num_meals
+    long long           last_meal_time; //last_meal
+    int              meals_eaten; //num_meals
     pthread_mutex_t     *left_fork;
     pthread_mutex_t     *right_fork;
     int                 flag;
@@ -27,13 +27,13 @@ typedef struct s_philosopher
 
 typedef struct 
 {
-    size_t              ph_amount; //num_of_philo
-    size_t              time_to_die;
-    size_t              time_to_eat;
-    size_t              time_to_sleep;
-    size_t              meals_count;
+    int              ph_amount; //num_of_philo
+    int              time_to_die;
+    int              time_to_eat;
+    int              time_to_sleep;
+    int              meals_count;
     int                 id; //index
-    size_t              start_time; //start
+    unsigned long long              start_time; //start
     t_philo             *philos;
     pthread_mutex_t     **forks;
     pthread_mutex_t     *sim; //typing
@@ -59,13 +59,12 @@ int                     ft_strlen(char *str);
 void 					*philo_routine(void *arg);
 int                     ft_isdigit(int c);
 void                    exit_with_error(char *msg);
-size_t                  get_time(void);
+int                  get_time(void);
 
 /*Errors and free mem*/
 void exit_with_error(char *msg);
 void free_forks_and_exit(pthread_mutex_t **forks, char *msg);
-void init_thread(t_philo_args   *table);
-void init_table(t_philo_args *table);
 void init_table_params(t_philo_args *table, char **argv);
-
+void	change_status(t_philo_args *table, char *str, int i, int flag);
+void free_forks(pthread_mutex_t **forks);
 #endif

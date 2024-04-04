@@ -21,6 +21,7 @@ void free_forks(pthread_mutex_t **forks)
 
 void free_forks_and_exit(pthread_mutex_t **forks, char *msg)
 {
+    free_forks(forks);
     write(2, msg, ft_strlen(msg));
     exit(1);
 }

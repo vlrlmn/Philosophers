@@ -44,7 +44,7 @@ void init_table(t_philo_args *table)
     while(i < table->ph_amount)
     {
         table->forks[i] = malloc(sizeof(pthread_mutex_t));
-        if (!table->forks[i++]);
+        if (!table->forks[i++])
             free_forks_and_exit(table->forks, "Error to malloc memory\n");
     }
     i = 0;

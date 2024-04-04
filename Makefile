@@ -5,7 +5,6 @@ FILES	=	main.c \
 			utils.c \
 			routine.c \
 			init_philo.c \
-			init_forks.c \
 			errors.c \
 
 CC		=	cc
