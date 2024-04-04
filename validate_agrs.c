@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validate_agrs.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
+/*   By: vlomakin <vlomakin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 18:04:00 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/03/28 18:25:39 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/04 13:18:42 by vlomakin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,6 @@ bool	valid_nums(char **argv)
 		i++;
 	}
 	if (argv[4] && (!is_num(argv[4]) || atol(argv[4]) < 0))
-		return(false);
+		return (false);
 	return (true);
 }

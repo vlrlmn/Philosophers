@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "fcntl.h": "c",
-        "philo.h": "c"
+        "philo.h": "c",
+        "pthread.h": "c"
     }
 }

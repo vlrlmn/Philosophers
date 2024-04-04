@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vlomakin <vlomakin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/04 13:18:39 by vlomakin          #+#    #+#             */
+/*   Updated: 2024/04/04 13:18:40 by vlomakin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 char	ft_iswhitespaces(const int c)
@@ -37,7 +49,7 @@ int	ft_atol(char *str)
 	return (result * n);
 }
 
-int ft_strlen(char *str)
+int	ft_strlen(char *str)
 {
 	int	i;
 

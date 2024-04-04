@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vlomakin <vlomakin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/04 13:18:29 by vlomakin          #+#    #+#             */
+/*   Updated: 2024/04/04 13:18:58 by vlomakin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	get_time(void)
@@ -9,15 +21,15 @@ int	get_time(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-     t_philo_args   table;
+	t_philo_args	table;
 
-    if (argc < 5 || argc > 6)
-        exit_with_error("Incorrect amount of arguments\n");
-    if (!valid_nums(argv + 1))
-        exit_with_error("Invalid arguments\n");
-    init_table_params(&table, argv);
-    init_table(&table);
-    init_thread(&table);
+	if (argc < 5 || argc > 6)
+		exit_with_error("Incorrect amount of arguments\n");
+	if (!valid_nums(argv + 1))
+		exit_with_error("Invalid arguments\n");
+	init_table_params(&table, argv);
+	init_table(&table);
+	init_thread(&table);
 }
