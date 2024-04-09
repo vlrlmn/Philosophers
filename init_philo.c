@@ -3,85 +3,94 @@
 /*                                                        :::      ::::::::   */
 /*   init_philo.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlomakin <vlomakin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 13:18:26 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/04 13:18:27 by vlomakin         ###   ########.fr       */
+/*   Updated: 2024/04/09 13:34:16 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-/*Set parameters for philosophers*/
-void	init_each_philosopher(t_philo_args *table, int i)
+static void	set_forks(t_philo *philo, t_fork *forks, int position)
 {
-	table->philos[i].ph_id = i + 1;
-	table->philos[i].meals_eaten = 0;
-	table->philos[i].flag = 1;
-	table->philos[i].meals_done = 0;
-	table->philos[i].right_fork = table->forks[i];
-	if (i + 1 == table->ph_amount)
-		table->philos[i].left_fork = table->forks[0];
-	else
-		table->philos[i].left_fork = table->forks[i + 1];
+	int	philo_nbr;
+
+	philo_nbr = philo->table->ph_amount;
+
+	philo->first_fork = &forks[(position + 1) % philo_nbr];
+	philo->second_fork = &forks[position];
+	if (philo->id % 2 == 0)
+	{
+		philo->first_fork = &forks[position];
+		philo->second_fork = &forks[(position + 1) % philo_nbr];
+	}
 }
 
 /*Init the philosophers. Malloc for the structure wiht a parameters for each philosopher*/
-void	init_philosophers(t_philo_args *table)
+static void	init_philosophers(t_philo_args *table)
 {
 	int	i;
+	t_philo *philo;
 
 	i = 0;
 	table->philos = malloc(sizeof(t_philo) * table->ph_amount);
 	if (!table->philos)
-	{
-		free_forks(table->forks);
-		free(table->sim);
-		exit_with_error("Memory error: philosopher is not created\n");
-	}
+		free_forks_and_exit("Memory error: philosopher is not created\n", table);
 	while (i < table->ph_amount)
-		init_each_philosopher(table, i++);
+	{
+		philo = table->philos + i;
+		philo->id = i + 1;
+		philo->full = false;
+		philo->meals_counter = 0;
+		philo->table = table;
+		if (pthread_mutex_init(&philo->philo_mutex, NULL))
+			error_mutex("Failed to create mutex", table);
+		set_forks(philo, table->forks, i);
+	}
+}
+
+void init_forks(t_philo_args *table)
+{
+	int	i;
+
+	i = 0;
+	table->forks = malloc(sizeof(t_philo) * table->ph_amount);
+	if (!table->forks)
+	{
+		exit_with_error("Memory error: fork is not created\n");
+	}
+	while(i < table->ph_amount)
+	{
+		if(pthread_mutex_init(&table->forks[i].fork, NULL))
+			pthread_failed("Error to init mutex", table);
+		table->forks[i].fork_id = i;
+		i++;
+	}
 }
 
 /*Init forks and pfilosophers: malloc memory for mutexes and init them. 
 The fork is a shared resource. The philisophers are processes*/
 void	init_table(t_philo_args *table)
 {
-	int	i;
-
-	i = 0;
-	table->id = 0;
-	table->forks = malloc(sizeof(pthread_mutex_t *) * table->ph_amount);
-	if (!table->forks)
-		exit_with_error("Error to malloc memory for forks \n");
-	while (i < table->ph_amount)
-	{
-		table->forks[i] = malloc(sizeof(pthread_mutex_t));
-		if (!table->forks[i++])
-			free_forks_and_exit(table->forks, "Error to malloc memory\n");
-	}
-	i = 0;
-	while (i < table->ph_amount)
-		pthread_mutex_init(table->forks[i++], NULL);
-	table->sim = malloc(sizeof(pthread_mutex_t));
-	if (!table->sim)
-		free_forks_and_exit(table->forks, "Error to malloc memory\n");
-	pthread_mutex_init(table->sim, NULL);
+	table->end_sim = false;
+	table->all_threads_ready = false;
+	init_forks(table);
 	init_philosophers(table);
-	table->start_time = gettimeofday(&table->timer, NULL);
 }
 
 /*Init table parameters after parsing*/
-void	init_table_params(t_philo_args *table, char **argv)
+void	parse_args(t_philo_args *table, char **argv)
 {
 	table->ph_amount = ft_atol(argv[1]);
-	table->time_to_die = ft_atol(argv[2]);
-	table->time_to_eat = ft_atol(argv[3]);
-	table->time_to_sleep = ft_atol(argv[4]);
+	table->time_to_die = ft_atol(argv[2]) * 1e3;
+	table->time_to_eat = ft_atol(argv[3]) * 1e3;
+	table->time_to_sleep = ft_atol(argv[4]) * 1e3;
 	if (argv[5])
-		table->meals_count = ft_atol(argv[5]);
+		table->meals = ft_atol(argv[5]);
 	else
-		table->meals_count = 0;
-	if (table->ph_amount < 2)
-		exit_with_error("Invalid amount of philosophers\n");
+		table->meals = -1;
+	if (table->time_to_die < 6e4 || table->time_to_eat < 6e4 
+					|| table->time_to_sleep < 6e4)
+		exit_with_error("Invalid parameters\n");
 }
