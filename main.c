@@ -6,7 +6,7 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 13:18:29 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/10 14:01:21 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/10 16:59:37 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,9 @@ int	main(int argc, char **argv)
 	if (!valid_nums(argv + 1))
 		exit_with_error("Invalid arguments\n");
 	parse_args(&table, argv);
+	printf("init table\n");
 	init_table(&table);
+	printf("init thread\n");
 	init_thread(&table);
 	clean_table(&table);
 }

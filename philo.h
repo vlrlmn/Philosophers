@@ -6,7 +6,7 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 13:18:32 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/10 14:34:08 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/10 16:05:35 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,5 +113,6 @@ void  time_err(char *msg, t_philo_args *table);
 void *monitor_dinner(void *data);
 bool all_threads_running(pthread_mutex_t *mutex, long *threads, long philo_nbr, t_philo_args *table);
 void increase_long(pthread_mutex_t *mutex, long *value, t_philo_args *table);
-void think(t_philo *philo, t_philo_args *table);
+void think(t_philo *philo, t_philo_args *table, bool pre_sim);
+void de_synch(t_philo *philo);
 #endif

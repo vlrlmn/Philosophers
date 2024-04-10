@@ -14,7 +14,7 @@ FILES	=	main.c \
 
 CC		=	cc
 
-CFLAGS	=	-Wall -Werror -Wextra  -I ./include
+CFLAGS	=	-Wall -Werror -Wextra --debug -I ./include
 
 LINKS	=	-pthread
 

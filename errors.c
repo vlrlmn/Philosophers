@@ -6,7 +6,7 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 13:18:23 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/10 14:01:32 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/10 17:21:11 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,31 +45,35 @@ void	free_forks(t_philo_args *table)
 
 void	free_forks_and_exit(t_philo_args *table, char *msg)
 {
-	free_forks(table);
+	(void)table;
+	//free_forks(table);
 	write(2, msg, ft_strlen(msg));
 	exit(1);
 }
 
 void	pthread_failed(char *msg, t_philo_args *table)
 {
-	free_forks(table);
-	free_philos(table);
+	(void)table;
+	//free_forks(table);
+	//free_philos(table);
 	printf("%s", msg);
 	exit(-1);
 }
 
 void  error_mutex(char *msg, t_philo_args *table)
 {
-	free_forks(table);
-	free_philos(table);
+	(void)table;
+	//free_forks(table);
+	//free_philos(table);
 	printf("%s", msg);
 	exit(-1);
 }
 
 void  time_err(char *msg, t_philo_args *table)
 {
-	free_forks(table);
-	free_philos(table);
+	(void)table;
+	//free_forks(table);
+	//free_philos(table);
 	printf("%s", msg);
 	exit(-1);
 };

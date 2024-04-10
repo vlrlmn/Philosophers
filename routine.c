@@ -6,32 +6,29 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 13:18:37 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/10 14:37:48 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/10 17:40:22 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void think(t_philo *philo, t_philo_args *table)
+void think(t_philo *philo, t_philo_args *table, bool pre_sim)
 {
 	long	t_eat;
 	long	t_sleep;
 	long	t_think;
 
+	if(!pre_sim)
+		write_status(THINKING, philo, table);
 	write_status(THINKING, philo, table);
 	if (philo->table->ph_amount % 2 == 0)
 		return ;
 	t_eat = philo->table->time_to_eat;
 	t_sleep = philo->table->time_to_sleep;
 	t_think = t_eat * 2 - t_sleep;
-	//if odd && t_eat < t_sleep -> t_think = t_eat * 2 - t_sleep
-	// if odd && t_eat == t_sleep -> t_think = t_eat
-	// if odd && t_eat > t_sleep -> t_think = t_eat * 2 - t_sleep
-	// if even && t_eat > t_sleep -> t_think = t_eat - t_sleep
-	// if even && t_eat <= t_sleep -> t_think = 0
-
-	// [[[[ if odd (EVEN???) -> t_think = t_eat * 2 - t_sleep ]]]] //
-
+	if (t_think < 0)
+		t_think = 0;
+	precise_usleep(t_think * 0.4, philo->table);
 }
 
 static void eat(t_philo *philo, t_philo_args *table)
@@ -71,7 +68,7 @@ void *philo_routine(void *data)
 		eat(philo, philo->table);
 		write_status(SLEEPING, philo, philo->table);
 		precise_usleep(philo->table->time_to_sleep, philo->table);
-		think(philo, philo->table);
+		think(philo, philo->table, false);
 	}
 	return (NULL);
 }
@@ -114,6 +111,7 @@ void init_thread(t_philo_args *table)
 	{
 		if (pthread_create(&table->philos[0].thread_id, NULL, lone_philo, &table->philos[0]))
 				pthread_failed("Failed to create thread", table);
+		printf("created lone thread\n");
 	}
 	else
 	{
@@ -121,13 +119,19 @@ void init_thread(t_philo_args *table)
 		{
 			if (pthread_create(&table->philos[i].thread_id, NULL, philo_routine, &table->philos[i]))
 				pthread_failed("Failed to create thread", table);
+			printf("created thread %d of %d with id = %d\n", i, table->ph_amount, table->philos[i].id);
 			i++;
 		}
 	}
 	if(pthread_create(&table->monitor, NULL, monitor_dinner, table))
 		pthread_failed("Failed to create thread", table);
+
+	printf("created monitor thread\n");
+	
 	table->start_sim = gettime(MILLISECOND, table);
+
 	set_bool(&table->table_mutex, &table->all_threads_ready, true, table);
+	
 	join_threads(table);
 	set_bool(&table->table_mutex, &table->end_sim, true, table);
 	if(pthread_join(table->monitor, NULL))

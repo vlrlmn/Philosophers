@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "first",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${cwd}/philo",
+            "args": ["5", "800", "200", "200"],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Make build"
+        }
+    ]
+}

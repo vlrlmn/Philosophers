@@ -6,7 +6,7 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 14:01:25 by lomakinaval       #+#    #+#             */
-/*   Updated: 2024/04/10 14:01:26 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/10 17:51:00 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,20 @@
 void set_bool(pthread_mutex_t *mutex, bool *dest, bool value, t_philo_args *table)
 {
     if(pthread_mutex_lock(mutex))
-        error_mutex("Mutex lock err\n", table);
+        error_mutex("set_bool Mutex lock err\n", table);
     *dest = value;
     if(pthread_mutex_unlock(mutex))
-        error_mutex("Mutex unlock err\n", table);
+        error_mutex("set_bool Mutex unlock err\n", table);
 }
 
 bool get_bool(pthread_mutex_t *mutex, bool *value, t_philo_args *table)
 {
     bool    ret;
     if(pthread_mutex_lock(mutex))
-        error_mutex("Mutex lock err\n", table);
+        error_mutex("get_bool Mutex lock err\n", table);
     ret = *value;
     if(pthread_mutex_unlock(mutex))
-        error_mutex("Mutex unlock err\n", table);
+        error_mutex("get_bool Mutex unlock err\n", table);
     return(ret);
 }
 
@@ -37,20 +37,20 @@ long get_long(pthread_mutex_t *mutex, long *value, t_philo_args *table)
 {
     long    ret;
     if(pthread_mutex_lock(mutex))
-        error_mutex("Mutex lock err\n", table);
+        error_mutex("get_long Mutex lock err\n", table);
     ret = *value;
     if(pthread_mutex_unlock(mutex))
-        error_mutex("Mutex unlock err\n", table);
+        error_mutex("get_long Mutex unlock err\n", table);
     return(ret);
 }
 
 void set_long(pthread_mutex_t *mutex, long *dest, long value, t_philo_args *table)
 {
     if(pthread_mutex_lock(mutex))
-        error_mutex("Mutex lock err\n", table);
+        error_mutex("set_long Mutex lock err\n", table);
     *dest = value;
     if(pthread_mutex_unlock(mutex))
-        error_mutex("Mutex unlock err\n", table);
+        error_mutex("et_long Mutex unlock err\n", table);
 }
 
 bool sim_finished(t_philo_args *table)

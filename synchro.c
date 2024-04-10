@@ -6,7 +6,7 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 14:00:52 by lomakinaval       #+#    #+#             */
-/*   Updated: 2024/04/10 14:34:48 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/10 17:44:43 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 void    wait_all_threads(t_philo_args *table)
 {
-    while (!get_bool(&table->table_mutex, &table->all_threads_ready, table))
-        ;
+    while (!get_bool(&table->table_mutex, &table->all_threads_ready, table));
 }
 
 bool all_threads_running(pthread_mutex_t *mutex, long *threads, long philo_nbr, t_philo_args *table)
@@ -51,6 +50,6 @@ void de_synch(t_philo *philo)
     else
     {
         if (philo->id % 2)
-            thinking(philo);
+            think(philo, philo->table, true);
     }
 }

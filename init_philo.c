@@ -6,7 +6,7 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 13:18:26 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/10 14:01:24 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/10 17:44:00 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,16 @@ static void	init_philosophers(t_philo_args *table)
 		free_forks_and_exit(table, "Memory error: philosopher is not created\n");
 	while (i < table->ph_amount)
 	{
+		
 		philo = table->philos + i;
 		philo->id = i + 1;
 		philo->full = false;
 		philo->meals_counter = 0;
 		philo->table = table;
 		if (pthread_mutex_init(&philo->philo_mutex, NULL))
-			error_mutex("Failed to create mutex", table);
+			error_mutex("Failed to create mutex\n", table);
 		set_forks(philo, table->forks, i);
+		i++;
 	}
 }
 
@@ -78,6 +80,10 @@ void	init_table(t_philo_args *table)
 	table->threads_run_num = 0;
 	init_forks(table);
 	init_philosophers(table);
+	if(pthread_mutex_init(&table->table_mutex, NULL))
+		pthread_failed("Error to init mutex", table);
+	if(pthread_mutex_init(&table->write_mutex, NULL))
+		pthread_failed("Error to init mutex", table);
 }
 
 /*Init table parameters after parsing*/
