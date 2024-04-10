@@ -1,20 +1,16 @@
-#include "philo.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   write_mutex.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/10 14:00:59 by lomakinaval       #+#    #+#             */
+/*   Updated: 2024/04/10 14:01:00 by lomakinaval      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// void write_status_debug(t_status stat, t_philo *philo, long elapsed)
-// {
-//     if(TAKE_FIRST_FORK == stat && !sim_finished(philo->table))
-//         printf("%6ld %d has taken a fork 1\n", elapsed, philo->id);
-//     else if(TAKE_SECOND_FORK == stat && !sim_finished(philo->table))
-//         printf("%6ld %d has taken a fork 2\n", elapsed, philo->id);
-//     else if (EATING == stat && !sim_finished(philo->table))
-//         printf("%6ld %d is eating", elapsed, philo->id);
-//     else if (SLEEPING == stat && !sim_finished(philo->table))
-//         printf("%6ld %d is sleeping", elapsed, philo->id);
-//     else if (THINKING == stat && !sim_finished(philo->table), elapsed, philo->id)
-//         printf("%6ld %d is thinking", elapsed, philo->id);
-//     else if(DIED == stat)
-//         printf("%6ld %d died\n", elapsed, philo->id);
-// }
+#include "philo.h"
 
 void write_status(t_status ph_status, t_philo *philo, t_philo_args *table)
 {
@@ -25,11 +21,9 @@ void write_status(t_status ph_status, t_philo *philo, t_philo_args *table)
         return ;
     if(pthread_mutex_lock(&philo->table->write_mutex))
         error_mutex("Mutex lock err\n", table);
-    // if(debug)
-    //     write_status_debug(ph_status, philo, elapsed);
     else
     {
-        if (TAKE_FIRST_FORK == ph_status || TAKE_SECOND_FORK == ph_status
+        if ((TAKE_FIRST_FORK == ph_status || TAKE_SECOND_FORK == ph_status)
             && !sim_finished(philo->table))
             printf("%-6ld %d has taken a fork'\n", elapsed, philo->id);
         else if(EATING == ph_status && !sim_finished(philo->table))

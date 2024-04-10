@@ -6,7 +6,7 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 13:18:26 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/09 13:34:16 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/10 14:01:24 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	init_philosophers(t_philo_args *table)
 	i = 0;
 	table->philos = malloc(sizeof(t_philo) * table->ph_amount);
 	if (!table->philos)
-		free_forks_and_exit("Memory error: philosopher is not created\n", table);
+		free_forks_and_exit(table, "Memory error: philosopher is not created\n");
 	while (i < table->ph_amount)
 	{
 		philo = table->philos + i;
@@ -75,6 +75,7 @@ void	init_table(t_philo_args *table)
 {
 	table->end_sim = false;
 	table->all_threads_ready = false;
+	table->threads_run_num = 0;
 	init_forks(table);
 	init_philosophers(table);
 }

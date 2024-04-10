@@ -6,11 +6,31 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 13:18:29 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/08 19:01:25 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/10 14:01:21 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	clean_table(t_philo_args *table)
+{
+	t_philo *philo;
+	int i;
+
+	i = 0;
+	while(i < table->ph_amount)
+	{
+		philo = table->philos + i;
+		if(pthread_mutex_destroy(&philo->philo_mutex))
+			exit_with_error("Error destroying mutex");
+	}
+	if(pthread_mutex_destroy(&table->write_mutex))
+		exit_with_error("Error destroying mutex");
+	if(pthread_mutex_destroy(&table->table_mutex))
+		exit_with_error("Error destroying mutex");
+	free(table->forks);
+	free(table->philos);
+}
 
 int	main(int argc, char **argv)
 {
@@ -23,4 +43,5 @@ int	main(int argc, char **argv)
 	parse_args(&table, argv);
 	init_table(&table);
 	init_thread(&table);
+	clean_table(&table);
 }

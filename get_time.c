@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_time.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/10 14:01:27 by lomakinaval       #+#    #+#             */
+/*   Updated: 2024/04/10 14:01:28 by lomakinaval      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 long    gettime(t_time  time_code, t_philo_args *table)
@@ -14,6 +26,7 @@ long    gettime(t_time  time_code, t_philo_args *table)
         return((tv.tv_sec * 1e6) + tv.tv_usec);
     else    
         time_err("Wrong time input\n", table);
+    return(-1);
 }
 
 void precise_usleep(long usec, t_philo_args *table)

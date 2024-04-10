@@ -6,11 +6,33 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 13:18:37 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/09 13:41:10 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/10 14:37:48 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void think(t_philo *philo, t_philo_args *table)
+{
+	long	t_eat;
+	long	t_sleep;
+	long	t_think;
+
+	write_status(THINKING, philo, table);
+	if (philo->table->ph_amount % 2 == 0)
+		return ;
+	t_eat = philo->table->time_to_eat;
+	t_sleep = philo->table->time_to_sleep;
+	t_think = t_eat * 2 - t_sleep;
+	//if odd && t_eat < t_sleep -> t_think = t_eat * 2 - t_sleep
+	// if odd && t_eat == t_sleep -> t_think = t_eat
+	// if odd && t_eat > t_sleep -> t_think = t_eat * 2 - t_sleep
+	// if even && t_eat > t_sleep -> t_think = t_eat - t_sleep
+	// if even && t_eat <= t_sleep -> t_think = 0
+
+	// [[[[ if odd (EVEN???) -> t_think = t_eat * 2 - t_sleep ]]]] //
+
+}
 
 static void eat(t_philo *philo, t_philo_args *table)
 {
@@ -18,7 +40,7 @@ static void eat(t_philo *philo, t_philo_args *table)
         error_mutex("Mutex lock err\n", table);
 	write_status(TAKE_FIRST_FORK, philo, table);
 	if(pthread_mutex_lock(&philo->second_fork->fork))
-        error_mutex("Mutex unlock err\n", table);
+        error_mutex("Mutex lock err\n", table);
 	write_status(TAKE_SECOND_FORK, philo, table);
 	set_long(&philo->philo_mutex, &philo->last_meal_time, gettime(MILLISECOND, table), table);
 	philo->meals_counter++;
@@ -27,9 +49,9 @@ static void eat(t_philo *philo, t_philo_args *table)
 	if (philo->table->meals > 0 && philo->meals_counter == philo->table->meals)
 		set_bool(&philo->philo_mutex, &philo->full, true, table);
 	if(pthread_mutex_unlock(&philo->first_fork->fork))
-        error_mutex("Mutex lock err\n", table);
+        error_mutex("Mutex unlock err\n", table);
 	if(pthread_mutex_unlock(&philo->second_fork->fork))
-        error_mutex("Mutex lock err\n", table);
+        error_mutex("Mutex unlock err\n", table);
 
 }
 
@@ -39,6 +61,9 @@ void *philo_routine(void *data)
 	philo = (t_philo *)data;
 	
 	wait_all_threads(philo->table);
+	set_long(&philo->philo_mutex, &philo->last_meal_time, gettime(MILLISECOND, philo->table), philo->table);
+	increase_long(&philo->table->table_mutex, &philo->table->threads_run_num, philo->table);
+	de_synch(philo);
 	while(!sim_finished(philo->table))
 	{
 		if(philo->full)
@@ -46,8 +71,9 @@ void *philo_routine(void *data)
 		eat(philo, philo->table);
 		write_status(SLEEPING, philo, philo->table);
 		precise_usleep(philo->table->time_to_sleep, philo->table);
-		think(philo);
+		think(philo, philo->table);
 	}
+	return (NULL);
 }
 
 void join_threads(t_philo_args *table)
@@ -57,10 +83,24 @@ void join_threads(t_philo_args *table)
 	i = 0;
 	while(i < table->ph_amount)
 	{
-		if(pthread_join(&table->philos[i].thread_id, NULL))
+		if(pthread_join(table->philos[i].thread_id, NULL))
 			pthread_failed("Failed to join threads\n", table);
 		i++;
 	}
+}
+
+void *lone_philo(void *arg)
+{
+	t_philo *philo;
+
+	philo = (t_philo *)arg;
+	wait_all_threads(philo->table);
+	set_long(&philo->philo_mutex, &philo->last_meal_time, gettime(MILLISECOND, philo->table), philo->table);
+	increase_long(&philo->table->table_mutex, &philo->table->threads_run_num, philo->table);
+	write_status(TAKE_FIRST_FORK, philo, philo->table);
+	while(!sim_finished(philo->table))
+		usleep(200);
+	return(NULL);
 }
 
 void init_thread(t_philo_args *table)
@@ -71,7 +111,10 @@ void init_thread(t_philo_args *table)
 	if (table->meals == 0)
 		return ;
 	else if(table->ph_amount == 1)
-		;
+	{
+		if (pthread_create(&table->philos[0].thread_id, NULL, lone_philo, &table->philos[0]))
+				pthread_failed("Failed to create thread", table);
+	}
 	else
 	{
 		while(i < table->ph_amount)
@@ -81,7 +124,12 @@ void init_thread(t_philo_args *table)
 			i++;
 		}
 	}
+	if(pthread_create(&table->monitor, NULL, monitor_dinner, table))
+		pthread_failed("Failed to create thread", table);
 	table->start_sim = gettime(MILLISECOND, table);
-	set_bool(&table->table_mutex, table->all_threads_ready, true, table);
+	set_bool(&table->table_mutex, &table->all_threads_ready, true, table);
 	join_threads(table);
+	set_bool(&table->table_mutex, &table->end_sim, true, table);
+	if(pthread_join(table->monitor, NULL))
+		pthread_failed("Failed to join threads\n", table);
 }

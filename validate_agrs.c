@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validate_agrs.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlomakin <vlomakin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 18:04:00 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/04 13:18:42 by vlomakin         ###   ########.fr       */
+/*   Updated: 2024/04/10 14:01:05 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
