@@ -6,7 +6,7 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 13:18:26 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/12 14:04:52 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/12 20:13:27 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ static void	set_forks(t_philo *philo, t_fork *forks, int position)
 	}
 }
 
-/*Init the philosophers. Malloc for the structure wiht a parameters for each philosopher*/
 static void	init_philosophers(t_philo_args *table)
 {
 	int	i;
@@ -36,7 +35,7 @@ static void	init_philosophers(t_philo_args *table)
 	i = 0;
 	table->philos = malloc(sizeof(t_philo) * table->ph_amount);
 	if (!table->philos)
-		free_forks_and_exit(table, "Memory error: philosopher is not created\n");
+		exit_with_error("Memory error: philosopher is not created\n");
 	while (i < table->ph_amount)
 	{
 		
@@ -46,7 +45,7 @@ static void	init_philosophers(t_philo_args *table)
 		philo->meals_counter = 0;
 		philo->table = table;
 		if (pthread_mutex_init(&philo->philo_mutex, NULL))
-			error_mutex("Failed to create mutex\n", table);
+			exit_with_error("Failed to init mutex\n");
 		set_forks(philo, table->forks, i);
 		i++;
 	}
@@ -59,20 +58,16 @@ void init_forks(t_philo_args *table)
 	i = 0;
 	table->forks = malloc(sizeof(t_philo) * table->ph_amount);
 	if (!table->forks)
-	{
 		exit_with_error("Memory error: fork is not created\n");
-	}
 	while(i < table->ph_amount)
 	{
 		if(pthread_mutex_init(&table->forks[i].fork, NULL))
-			pthread_failed("Error to init mutex\n", table);
+			exit_with_error("Failed to init mutex\n");
 		table->forks[i].fork_id = i;
 		i++;
 	}
 }
 
-/*Init forks and pfilosophers: malloc memory for mutexes and init them. 
-The fork is a shared resource. The philisophers are processes*/
 void	init_table(t_philo_args *table)
 {
 	table->end_sim = false;
@@ -81,12 +76,11 @@ void	init_table(t_philo_args *table)
 	init_forks(table);
 	init_philosophers(table);
 	if(pthread_mutex_init(&table->table_mutex, NULL))
-		pthread_failed("Error to init mutex\n", table);
+		exit_with_error("Failed to init mutex\n");
 	if(pthread_mutex_init(&table->write_mutex, NULL))
-		pthread_failed("Error to init mutex\n", table);
+		exit_with_error("Failed to init mutex\n");
 }
 
-/*Init table parameters after parsing*/
 void	parse_args(t_philo_args *table, char **argv)
 {
 	table->ph_amount = ft_atol(argv[1]);

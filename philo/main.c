@@ -6,7 +6,7 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 13:18:29 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/12 18:44:33 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/12 20:08:00 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	clean_table(t_philo_args *table)
 		i++;
 		if(pthread_mutex_destroy(&philo->philo_mutex))
 			exit_with_error("Error destroying mutex\n");
-
 	}
 	if(pthread_mutex_destroy(&table->write_mutex))
 		exit_with_error("Error destroying mutex\n");

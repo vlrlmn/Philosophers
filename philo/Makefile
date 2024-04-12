@@ -11,6 +11,7 @@ FILES	=	main.c \
 			synchro.c \
 			getters_setters.c \
 			monitor.c \
+			thread_functions.c \
 
 CC		=	cc
 
