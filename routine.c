@@ -6,7 +6,7 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 13:18:37 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/10 17:40:22 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/12 15:41:22 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void *philo_routine(void *data)
 	de_synch(philo);
 	while(!sim_finished(philo->table))
 	{
-		if(philo->full)
+		if(get_bool(&philo->philo_mutex, &philo->full, philo->table))
 			break ;
 		eat(philo, philo->table);
 		write_status(SLEEPING, philo, philo->table);
@@ -110,23 +110,19 @@ void init_thread(t_philo_args *table)
 	else if(table->ph_amount == 1)
 	{
 		if (pthread_create(&table->philos[0].thread_id, NULL, lone_philo, &table->philos[0]))
-				pthread_failed("Failed to create thread", table);
-		printf("created lone thread\n");
+				pthread_failed("Failed to create thread\n", table);
 	}
 	else
 	{
 		while(i < table->ph_amount)
 		{
 			if (pthread_create(&table->philos[i].thread_id, NULL, philo_routine, &table->philos[i]))
-				pthread_failed("Failed to create thread", table);
-			printf("created thread %d of %d with id = %d\n", i, table->ph_amount, table->philos[i].id);
+				pthread_failed("Failed to create thread\n", table);
 			i++;
 		}
 	}
 	if(pthread_create(&table->monitor, NULL, monitor_dinner, table))
-		pthread_failed("Failed to create thread", table);
-
-	printf("created monitor thread\n");
+		pthread_failed("Failed to create thread\n", table);
 	
 	table->start_sim = gettime(MILLISECOND, table);
 

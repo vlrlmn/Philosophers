@@ -6,7 +6,7 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 14:00:59 by lomakinaval       #+#    #+#             */
-/*   Updated: 2024/04/10 14:01:00 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/12 15:43:55 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void write_status(t_status ph_status, t_philo *philo, t_philo_args *table)
     long    elapsed;
 
     elapsed = gettime(MILLISECOND, table) - table->start_sim;
-    if (philo->full)
+    if (get_bool(&philo->philo_mutex, &philo->full, table))
         return ;
     if(pthread_mutex_lock(&philo->table->write_mutex))
         error_mutex("Mutex lock err\n", table);
@@ -33,7 +33,7 @@ void write_status(t_status ph_status, t_philo *philo, t_philo_args *table)
         else if(THINKING == ph_status && !sim_finished(philo->table))
             printf("%-6ld %d is thinking\n", elapsed, philo->id);
         else if(DIED == ph_status)
-            printf("%-6ld %d is sleeping\n", elapsed, philo->id);
+            printf("%-6ld %d is dead\n", elapsed, philo->id);
     }
     if(pthread_mutex_unlock(&philo->table->write_mutex))
         error_mutex("Mutex unlock err\n", table);

@@ -6,7 +6,7 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 13:18:26 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/10 17:44:00 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/12 14:04:52 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void init_forks(t_philo_args *table)
 	while(i < table->ph_amount)
 	{
 		if(pthread_mutex_init(&table->forks[i].fork, NULL))
-			pthread_failed("Error to init mutex", table);
+			pthread_failed("Error to init mutex\n", table);
 		table->forks[i].fork_id = i;
 		i++;
 	}
@@ -81,9 +81,9 @@ void	init_table(t_philo_args *table)
 	init_forks(table);
 	init_philosophers(table);
 	if(pthread_mutex_init(&table->table_mutex, NULL))
-		pthread_failed("Error to init mutex", table);
+		pthread_failed("Error to init mutex\n", table);
 	if(pthread_mutex_init(&table->write_mutex, NULL))
-		pthread_failed("Error to init mutex", table);
+		pthread_failed("Error to init mutex\n", table);
 }
 
 /*Init table parameters after parsing*/

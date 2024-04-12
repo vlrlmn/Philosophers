@@ -6,7 +6,7 @@
 /*   By: lomakinavaleria <lomakinavaleria@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 13:18:29 by vlomakin          #+#    #+#             */
-/*   Updated: 2024/04/10 16:59:37 by lomakinaval      ###   ########.fr       */
+/*   Updated: 2024/04/12 18:31:32 by lomakinaval      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,15 @@ void	clean_table(t_philo_args *table)
 	while(i < table->ph_amount)
 	{
 		philo = table->philos + i;
+		i++;
 		if(pthread_mutex_destroy(&philo->philo_mutex))
-			exit_with_error("Error destroying mutex");
+			exit_with_error("Error destroying mutex\n");
+
 	}
 	if(pthread_mutex_destroy(&table->write_mutex))
-		exit_with_error("Error destroying mutex");
+		exit_with_error("Error destroying mutex\n");
 	if(pthread_mutex_destroy(&table->table_mutex))
-		exit_with_error("Error destroying mutex");
+		exit_with_error("Error destroying mutex\n");
 	free(table->forks);
 	free(table->philos);
 }
@@ -41,9 +43,7 @@ int	main(int argc, char **argv)
 	if (!valid_nums(argv + 1))
 		exit_with_error("Invalid arguments\n");
 	parse_args(&table, argv);
-	printf("init table\n");
 	init_table(&table);
-	printf("init thread\n");
 	init_thread(&table);
 	clean_table(&table);
 }
