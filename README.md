@@ -26,8 +26,13 @@ The Dining Philosophers problem consists of philosophers seated at a round table
    ```
 ## Parameters:
 ***number_of_philosophers:*** The number of philosophers and forks.
+
 ***time_to_die:*** The maximum time since the start of their last meal or the beginning of the simulation, after which a philosopher must start eating.
+
 ***time_to_eat:*** The time it takes for a philosopher to eat. During this time they must keep holding two forks.
+
 ***time_to_sleep:*** The time a philosopher will spend sleeping.
+
 ***number_of_times_each_philosopher_must_eat:*** (optional) If all philosophers eat at least this number of times, the simulation will stop.
+
 
