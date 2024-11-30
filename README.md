@@ -14,7 +14,7 @@ The Dining Philosophers problem consists of philosophers seated at a round table
 ## Usage
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/vlrlmn/Philosophers.git
    ```
 2. Compile the program:
    ```bash
